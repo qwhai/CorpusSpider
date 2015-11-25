@@ -14,10 +14,10 @@ import org.utils.naga.web.HTMLParserUtils;
 public class DownloadHTML {
 
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = "http://www.cnblogs.com/cate/android/";
+    private static final String BASE_URL = "http://www.cnblogs.com/cate/Engineering/";
     private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/手机开发/Android";
+    private static final String SUB_PATH = BASE_PATH + "/软件工程/软件工程";
     
     static {
         mBloomFilter = new BloomFilter();
@@ -26,7 +26,7 @@ public class DownloadHTML {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 208; i++) {
+        for (int i = 1; i <= 7; i++) {
             url = BASE_URL + i;
             addElements(url);
             downloadHTMLs(SUB_PATH);
