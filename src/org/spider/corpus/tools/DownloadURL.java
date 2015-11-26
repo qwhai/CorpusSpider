@@ -6,24 +6,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.spider.corpus.queue.SpiderQueue;
-import org.spider.corpus.utils.StringFormatUtils;
 import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.filter.BloomFilter;
 import org.utils.naga.web.HTMLParserUtils;
 
 /**
- * 按照一定的协议将网页下载到本地
+ * 按照一定的协议将网页地址下载到本地
  * 
  * @author Naga
  * Blog : http://blog.csdn.net/lemon_tree12138
  */
-public class DownloadHTML {
+public class DownloadURL {
 
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = "http://dataunion.org/category/article/tech/%E5%88%86%E6%9E%90%E6%8C%96%E6%8E%98/page/";
+    private static final String BASE_URL = "http://www.cnblogs.com/cate/csharp/";
     private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/数据挖掘";
+    private static final String SUB_PATH = BASE_PATH + "/docNET技术/C#.txt";
     
     static {
         mBloomFilter = new BloomFilter();
@@ -32,23 +31,38 @@ public class DownloadHTML {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 26; i++) {
+        for (int i = 1; i <= 181; i++) {
             url = BASE_URL + i;
-            addElements(url);
-            downloadHTMLs(SUB_PATH);
-            System.out.println("[" + i + "] " + url);
+            addCnblogsHTMLElements(url);
         }
+        
+        downloadHTMLs(SUB_PATH);
     }
     
-    private static void addElements(String url) {
+    // 数盟 http://dataunion.org
+    @SuppressWarnings("unused")
+    private static void addDataunionHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
             Elements titlelnkElements = document.getElementsByAttributeValue("class", "excerpt");
             for (Element element : titlelnkElements) {
                 mSpiderQueue.offer(element.child(0).child(0).child(0).attr("href"));
-                
-                System.out.println(element.child(0).child(0).child(0).attr("href"));
                 System.out.println(element.child(0).text());
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 博客园 http://www.cnblogs.com/
+    private static void addCnblogsHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "titlelnk");
+            for (Element element : titlelnkElements) {
+                mSpiderQueue.offer(element.attr("href"));
+                System.out.println(element.text());
             }
         } catch (IOException e) {
             System.err.println("addElements:" + url);
@@ -58,21 +72,28 @@ public class DownloadHTML {
     
     private static void downloadHTMLs(String downloadPath) {
         String currentURL = "";
+        StringBuffer buffer = new StringBuffer();
         while(!mSpiderQueue.isQueueEmpty()) {
             currentURL = mSpiderQueue.poll();
             if (!mBloomFilter.contains(currentURL)) {
-                downloadHTML(downloadPath + "/" + StringFormatUtils.formatURL(currentURL) + ".html", currentURL);
+                buffer.append(currentURL + "\n");
                 mBloomFilter.add(currentURL);
             }
+            
+            if (buffer.length() >= 1000) {
+                writeURLs(downloadPath, buffer.toString());
+                buffer.setLength(0);
+            }
         }
+        
+        writeURLs(downloadPath, buffer.toString());
     }
     
-    private static void downloadHTML(String path, String url) {
+    private static void writeURLs(String path, String content) {
         try {
-            String htmlContent = HTMLParserUtils.requestHTMLToString(url);
-            FileWriteUtils.write2File(path, htmlContent);
+            FileWriteUtils.write2File(path, content);
         } catch (IOException e) {
-            System.err.println("downloadHTML:" + url);
+            System.err.println("downloadHTML:" + content);
             e.printStackTrace();
         }
     }
