@@ -18,11 +18,12 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class DownloadURL {
 
+    static final String BASE_ADDRESS = "http://domestic.firefox.163.com";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = "http://www.cnblogs.com/cate/csharp/";
+    private static final String BASE_URL = "http://domestic.firefox.163.com/roll_";
     private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/docNET技术/C#.txt";
+    private static final String SUB_PATH = BASE_PATH + "/其他分类/云计算.txt";
     
     static {
         mBloomFilter = new BloomFilter();
@@ -31,12 +32,12 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 181; i++) {
-            url = BASE_URL + i;
-            addCnblogsHTMLElements(url);
+        for (int i = 1; i <= 1; i++) {
+            url = BASE_URL + i + ".html";
+            addFirefoxHTMLElements(url);
         }
         
-        downloadHTMLs(SUB_PATH);
+//        downloadHTMLs(SUB_PATH);
     }
     
     // 数盟 http://dataunion.org
@@ -56,6 +57,7 @@ public class DownloadURL {
     }
     
     // 博客园 http://www.cnblogs.com/
+    @SuppressWarnings("unused")
     private static void addCnblogsHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
@@ -63,6 +65,22 @@ public class DownloadURL {
             for (Element element : titlelnkElements) {
                 mSpiderQueue.offer(element.attr("href"));
                 System.out.println(element.text());
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 火狐新闻
+    private static void addFirefoxHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "list_box");
+            for (Element element : titlelnkElements) {
+                mSpiderQueue.offer(BASE_ADDRESS + element.attr("href"));
+                System.out.println(element.child(0).text());
+                System.out.println(BASE_ADDRESS + element.attr("href"));
             }
         } catch (IOException e) {
             System.err.println("addElements:" + url);
