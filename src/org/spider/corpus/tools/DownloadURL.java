@@ -1,6 +1,7 @@
 package org.spider.corpus.tools;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,18 +13,22 @@ import org.utils.naga.web.HTMLParserUtils;
 
 /**
  * 按照一定的协议将网页地址下载到本地
+ * 2015‎年‎11‎月‎26‎日
  * 
- * @author Naga</br>
- * Blog : http://blog.csdn.net/lemon_tree12138
+ * @author Q-WHai
+ * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
+ * @version 0.1
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://weather.sina.com.cn/china";
+    static final String BASE_ADDRESS = "http://cd.esf.sina.com.cn/house";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/";
+    private static final String BASE_URL = BASE_ADDRESS + "/n";
     private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/天气/天气预报.txt";
+    private static final String SUB_PATH = BASE_PATH + "/房产/房产.txt";
+    
+    static AtomicInteger urlCount = new AtomicInteger(0);
     
     static {
         mBloomFilter = new BloomFilter();
@@ -32,12 +37,11 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 1; i++) {
+        for (int i = 1; i <= 1000; i++) {
             url = BASE_URL;
-            addWeatherSinaHTMLElements(url);
+            addSinaHouseHTMLElements(url);
+            downloadHTMLs(SUB_PATH);
         }
-        
-        downloadHTMLs(SUB_PATH);
     }
     
     // 数盟 http://dataunion.org
@@ -89,6 +93,7 @@ public class DownloadURL {
     }
     
     // 新浪天气(省)
+    @SuppressWarnings("unused")
     private static void addWeatherSinaHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
@@ -111,9 +116,27 @@ public class DownloadURL {
             Elements titlelnkElements = document.getElementsByAttributeValue("class", "wd_cm_table");
             for (Element element : titlelnkElements) {
                 for (Element childElement : element.children()) {
-                    mSpiderQueue.offer(childElement.child(0).child(0).child(0).attr("href"));
-                    System.out.println(childElement.child(0).child(0).child(0));
+                    Element tmpElement = childElement.child(0).child(0).child(0);
+                    mSpiderQueue.offer(tmpElement.attr("href"));
+                    System.out.println(tmpElement.attr("href"));
                 }
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 新浪房产
+    private static void addSinaHouseHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "grid-s5m0e5");
+            for (Element element : titlelnkElements) {
+                urlCount.incrementAndGet();
+                Element tmpElement = element.child(0).child(0).child(0).child(0).child(0);
+                mSpiderQueue.offer(tmpElement.attr("href"));
+                System.out.println("[" + urlCount.get() + "]" + tmpElement.attr("href"));
             }
         } catch (IOException e) {
             System.err.println("addElements:" + url);
@@ -129,6 +152,8 @@ public class DownloadURL {
             if (!mBloomFilter.contains(currentURL)) {
                 buffer.append(currentURL + "\n");
                 mBloomFilter.add(currentURL);
+            } else {
+                System.err.println("----------------- URL已存在 --------------------");
             }
             
             if (buffer.length() >= 1000) {
@@ -142,7 +167,7 @@ public class DownloadURL {
     
     private static void writeURLs(String path, String content) {
         try {
-            FileWriteUtils.write2File(path, content);
+            FileWriteUtils.appendFile(path, content);
         } catch (IOException e) {
             System.err.println("downloadHTML:" + content);
             e.printStackTrace();

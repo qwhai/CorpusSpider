@@ -13,9 +13,11 @@ import org.utils.naga.web.HTMLParserUtils;
 
 /**
  * 按照一定的协议将网页下载到本地
+ * 2015‎年‎11‎月‎25‎日
  * 
- * @author Naga
- * Blog : http://blog.csdn.net/lemon_tree12138
+ * @author Q-WHai
+ * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
+ * @version 0.1
  */
 @Deprecated
 public class DownloadHTML {
@@ -71,7 +73,7 @@ public class DownloadHTML {
     private static void downloadHTML(String path, String url) {
         try {
             String htmlContent = HTMLParserUtils.requestHTMLToString(url);
-            FileWriteUtils.write2File(path, htmlContent);
+            FileWriteUtils.appendFile(path, htmlContent);
         } catch (IOException e) {
             System.err.println("downloadHTML:" + url);
             e.printStackTrace();
