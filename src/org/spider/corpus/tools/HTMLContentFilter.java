@@ -14,7 +14,7 @@ import org.utils.naga.web.HTMLParserUtils;
 public class HTMLContentFilter {
 
     public static void main(String[] args) {
-        new HTMLContentFilter().filter("http://domestic.firefox.163.com/roll_1.html");
+        new HTMLContentFilter().filter("http://weather.sina.com.cn/");
     }
     
     private void filter(String url) {

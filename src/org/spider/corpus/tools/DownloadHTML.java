@@ -17,6 +17,7 @@ import org.utils.naga.web.HTMLParserUtils;
  * @author Naga
  * Blog : http://blog.csdn.net/lemon_tree12138
  */
+@Deprecated
 public class DownloadHTML {
 
     private static BloomFilter mBloomFilter = null;
