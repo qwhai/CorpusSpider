@@ -21,12 +21,12 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://cd.esf.sina.com.cn/house";
+    static final String BASE_ADDRESS = "http://history.sina.com.cn";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/n";
+    private static final String BASE_URL = BASE_ADDRESS + "/";
     private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/房产/房产.txt";
+    private static final String SUB_PATH = BASE_PATH + "/历史资料.txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
     
@@ -37,9 +37,9 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 1000; i++) {
+        for (int i = 1; i <= 1; i++) {
             url = BASE_URL;
-            addSinaHouseHTMLElements(url);
+            addSinaHistoryHTMLElements(url);
             downloadHTMLs(SUB_PATH);
         }
     }
@@ -128,6 +128,7 @@ public class DownloadURL {
     }
     
     // 新浪房产
+    @SuppressWarnings("unused")
     private static void addSinaHouseHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
@@ -135,6 +136,43 @@ public class DownloadURL {
             for (Element element : titlelnkElements) {
                 urlCount.incrementAndGet();
                 Element tmpElement = element.child(0).child(0).child(0).child(0).child(0);
+                mSpiderQueue.offer(tmpElement.attr("href"));
+                System.out.println("[" + urlCount.get() + "]" + tmpElement.attr("href"));
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 新浪中医
+    @SuppressWarnings("unused")
+    private static void addSinaChineseMedicineHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "artList");
+            Elements childrenElements = titlelnkElements.get(0).children();
+            for (Element element : childrenElements) {
+                urlCount.incrementAndGet();
+                Element tmpElement = element.child(0).child(0);
+                mSpiderQueue.offer(BASE_ADDRESS + tmpElement.attr("href"));
+                System.out.println("[" + urlCount.get() + "]" + BASE_ADDRESS + tmpElement.attr("href"));
+                System.out.println(tmpElement.text());
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // TODO 新浪历史
+    private static void addSinaHistoryHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "news-item  img-news-item");
+            for (Element element : titlelnkElements) {
+                urlCount.incrementAndGet();
+                Element tmpElement = element.child(0).child(0);
                 mSpiderQueue.offer(tmpElement.attr("href"));
                 System.out.println("[" + urlCount.get() + "]" + tmpElement.attr("href"));
             }

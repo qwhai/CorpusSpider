@@ -30,7 +30,7 @@ public class ExtractionHTMLText {
         AnjsSplitWordsUtils utils = new AnjsSplitWordsUtils();
         
         try {
-            List<String> lines = FileReadUtils.readLines(RAW_PATH + "Android.txt");
+            List<String> lines = FileReadUtils.readLines(RAW_PATH + "汽车新闻.txt");
             
             for (String line : lines) {
                 String text = HTMLParserUtils.requestHTMLText(line, 30000);
@@ -38,10 +38,10 @@ public class ExtractionHTMLText {
                     continue;
                 }
                 
-                FileWriteUtils.appendFile(PARSER_PATH + "Android.txt", text);
+                FileWriteUtils.appendFile(PARSER_PATH + "汽车新闻.txt", text);
                 
                 List<String> textWords = utils.getAnalyzerWordList(text);
-                FileWriteUtils.appendFile(PARSER_PATH + FileUtils.removeSuffixName("Android.txt"), textWords.toString());
+                FileWriteUtils.appendFile(PARSER_PATH + FileUtils.removeSuffixName("汽车新闻.txt"), textWords.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
