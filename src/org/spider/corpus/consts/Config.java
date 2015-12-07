@@ -1,65 +1,138 @@
 package org.spider.corpus.consts;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.utils.naga.containers.ArrayUtils;
 
 /**
- * 配置文件
- * 多是一些常量的记录文件
+ * <p>配置文件</p>
+ * <p>多是一些常量的记录文件</p>
+ * 2015年12月3日
  * 
- * @author Naga
- * Blog : http://blog.csdn.net/lemon_tree12138
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
+ * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
+ * @version 0.1
  */
 public class Config {
 
     public static class SystemConfig {
+        
         /** 是否打印调试信息的开关 */
         public static final boolean DEBUG = false;
     }
     
-    public static class UrlConfig {
-        public static final String URL_MAP_INFO_TITLE = "info_title";
-        public static final String URL_MAP_INFO_KEYWORDS = "info_keywords";
-        public static final String URL_MAP_INFO_DESCRIPTION = "info_description";
-        
-        public final static int URL_VISITED_READ_TIMED_OUT = 100; // Read timed out
-        public final static int URL_VISITED_UNKNOWNHOST = 101; // UnknownHostException
-        public final static int URL_VISITED_UNHANDLED_CONTENT_TYPE = 102; // Unhandled content type
-        public final static int URL_VISITED_UNKNOWN_ERROR = 103; // unknown error
-        public final static int URL_VISITED_OK = 200;
-        public final static int URL_VISITED_403 = 403; // HTTP error fetching URL. Status=403
-        public final static int URL_VISITED_404 = 404; // HTTP error fetching URL. Status=404
-        public final static int URL_VISITED_500 = 500; // HTTP error fetching URL. Status=500
-    }
-    
-    public static class ClassifyPathConfig {
-        private final static String TRAINNING_HOME = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/";
-        
-        /** 分类器的训练文档 */
-        public final static String TRAINNING_PATH = TRAINNING_HOME + "TrainningSet";
-        /** 从网页上download下来的原始训练文档目录 */
-        public static final String RAW_SET_DIRECTORY = TRAINNING_HOME + "raw_set";
-        /** 分类器训练文档的来源保存目录 */
-        public static final String RAW_URL_DIRECTORY = TRAINNING_HOME + "raw_url";
-    }
-    
     public static class ClassifyConfig {
-        /** 在分词过程中，用于分隔开词汇的分隔符 */
-        public static final String ANALYZER_SEPARATOR = "#@#";
-        
-        /** 40个特征关键词的权重 */
-        public final static double[] FEATURES_WEIGHT = {
-                23.372442228572158, 11.686221114286079, 7.79081407619072, 5.8431105571430395, 4.674488445714432,
-                3.89540703809536, 3.338920318367451, 2.9215552785715198, 2.5969380253969065, 2.337244222857216,
-                2.1247674753247416, 1.94770351904768, 1.7978801714286274, 1.6694601591837255, 1.558162815238144,
-                1.4607776392857599, 1.3748495428571859, 1.2984690126984533, 1.230128538345903, 1.168622111428608,
-                1.112973439455817, 1.0623837376623708, 1.0161931403727025, 0.97385175952384, 0.9348976891428863,
-                0.8989400857143137, 0.8656460084656354, 0.8347300795918627, 0.8059462837438676, 0.779081407619072,
-                0.7539497493087793, 0.7303888196428799, 0.7082558251082473, 0.6874247714285929, 0.6677840636734902,
-                0.6492345063492266, 0.6316876277992475, 0.6150642691729515, 0.5992933904762092, 0.584311055714304
-        };
+        public static Map<String, Classify> classifyMap = new HashMap<String, Classify>();
+        static {
+            // 技术开发
+            classifyMap.put(Classify.Android.getDesc(), Classify.Android);
+            classifyMap.put(Classify.Python.getDesc(), Classify.Python);
+            classifyMap.put(Classify.Java.getDesc(), Classify.Java);
+            classifyMap.put(Classify.IOS.getDesc(), Classify.IOS);
+            classifyMap.put(Classify.Ruby.getDesc(), Classify.Ruby);
+            classifyMap.put(Classify.C.getDesc(), Classify.C);
+            classifyMap.put(Classify.PHP.getDesc(), Classify.PHP);
+            classifyMap.put(Classify.Linux.getDesc(), Classify.Linux);
+            classifyMap.put(Classify.Coding.getDesc(), Classify.Coding);
+            classifyMap.put(Classify.Database.getDesc(), Classify.Database);
+            classifyMap.put(Classify.Demand.getDesc(), Classify.Demand);
+            classifyMap.put(Classify.Datamining.getDesc(), Classify.Datamining);
+            classifyMap.put(Classify.AI.getDesc(), Classify.AI);
+            classifyMap.put(Classify.Bigdata.getDesc(), Classify.Bigdata);
+            classifyMap.put(Classify.ComputerGraphics.getDesc(), Classify.ComputerGraphics);
+            classifyMap.put(Classify.SoftTesting.getDesc(), Classify.SoftTesting);
+            classifyMap.put(Classify.DesignPattern.getDesc(), Classify.DesignPattern);
+            classifyMap.put(Classify.ProjectManage.getDesc(), Classify.ProjectManage);
+            classifyMap.put(Classify.InformationSecurity.getDesc(), Classify.InformationSecurity);
+            classifyMap.put(Classify.CloudComputing.getDesc(), Classify.CloudComputing);
+            classifyMap.put(Classify.FramewordDesign.getDesc(), Classify.FramewordDesign);
+            
+            // 休闲娱乐
+            classifyMap.put(Classify.Video.getDesc(), Classify.Video);
+            classifyMap.put(Classify.Muisc.getDesc(), Classify.Muisc);
+            classifyMap.put(Classify.Financial.getDesc(), Classify.Financial);
+            classifyMap.put(Classify.Cartoon.getDesc(), Classify.Cartoon);
+            classifyMap.put(Classify.Picture.getDesc(), Classify.Picture);
+            classifyMap.put(Classify.Novel.getDesc(), Classify.Novel);
+            classifyMap.put(Classify.Game.getDesc(), Classify.Game);
+            classifyMap.put(Classify.Fortune.getDesc(), Classify.Fortune);
+            classifyMap.put(Classify.Humor.getDesc(), Classify.Humor);
+            classifyMap.put(Classify.Live.getDesc(), Classify.Live);
+            classifyMap.put(Classify.Sport.getDesc(), Classify.Sport);
+            classifyMap.put(Classify.Lottery.getDesc(), Classify.Lottery);
+            
+            // 网上商城
+            classifyMap.put(Classify.Surrounding.getDesc(), Classify.Surrounding);
+            classifyMap.put(Classify.Shopping.getDesc(), Classify.Shopping);
+            
+            // 网络服务
+            classifyMap.put(Classify.SearchEngine.getDesc(), Classify.SearchEngine);
+            classifyMap.put(Classify.Login.getDesc(), Classify.Login);
+            classifyMap.put(Classify.CloudDisk.getDesc(), Classify.CloudDisk);
+            classifyMap.put(Classify.Portal.getDesc(), Classify.Portal);
+            classifyMap.put(Classify.Communication.getDesc(), Classify.Communication);
+            classifyMap.put(Classify.E_Mail.getDesc(), Classify.E_Mail);
+            classifyMap.put(Classify.Spam.getDesc(), Classify.Spam);
+            classifyMap.put(Classify.E_GreetingCard.getDesc(), Classify.E_GreetingCard);
+            
+            // 商业经济
+            classifyMap.put(Classify.Energy.getDesc(), Classify.Energy);
+            classifyMap.put(Classify.Agriculture.getDesc(), Classify.Agriculture);
+            classifyMap.put(Classify.Bank.getDesc(), Classify.Bank);
+            
+            // 生活服务
+            classifyMap.put(Classify.Hotel.getDesc(), Classify.Hotel);
+            classifyMap.put(Classify.Tourism.getDesc(), Classify.Tourism);
+            classifyMap.put(Classify.Cook.getDesc(), Classify.Cook);
+            classifyMap.put(Classify.Map.getDesc(), Classify.Map);
+            classifyMap.put(Classify.Weather.getDesc(), Classify.Weather);
+            classifyMap.put(Classify.Ticket.getDesc(), Classify.Ticket);
+            classifyMap.put(Classify.House.getDesc(), Classify.House);
+            classifyMap.put(Classify.Friend.getDesc(), Classify.Friend);
+            classifyMap.put(Classify.Logistics.getDesc(), Classify.Logistics);
+            classifyMap.put(Classify.Law.getDesc(), Classify.Law);
+            classifyMap.put(Classify.Health.getDesc(), Classify.Health);
+            
+            // 教育文化
+            classifyMap.put(Classify.Education.getDesc(), Classify.Education);
+            classifyMap.put(Classify.Math.getDesc(), Classify.Math);
+            classifyMap.put(Classify.Chymistry.getDesc(), Classify.Chymistry);
+            classifyMap.put(Classify.Physical.getDesc(), Classify.Physical);
+            classifyMap.put(Classify.Exam.getDesc(), Classify.Exam);
+            classifyMap.put(Classify.Biology.getDesc(), Classify.Biology);
+            classifyMap.put(Classify.Astronomy.getDesc(), Classify.Astronomy);
+            classifyMap.put(Classify.History.getDesc(), Classify.History);
+            classifyMap.put(Classify.Baby.getDesc(), Classify.Baby);
+            
+            // 博客论坛
+            classifyMap.put(Classify.Salon.getDesc(), Classify.Salon);
+            classifyMap.put(Classify.Tainning.getDesc(), Classify.Tainning);
+            classifyMap.put(Classify.TechnicalBBS.getDesc(), Classify.TechnicalBBS);
+            
+            // 资讯新闻
+            classifyMap.put(Classify.ChineseNews.getDesc(), Classify.ChineseNews);
+            classifyMap.put(Classify.ITNews.getDesc(), Classify.ITNews);
+            classifyMap.put(Classify.Social.getDesc(), Classify.Social);
+            classifyMap.put(Classify.Military.getDesc(), Classify.Military);
+            classifyMap.put(Classify.InternationalNews.getDesc(), Classify.InternationalNews);
+            classifyMap.put(Classify.CarNews.getDesc(), Classify.CarNews);
+            classifyMap.put(Classify.Gossip.getDesc(), Classify.Gossip);
+            classifyMap.put(Classify.LawNews.getDesc(), Classify.LawNews);
+            
+            // 资源工具
+            classifyMap.put(Classify.Translation.getDesc(), Classify.Translation);
+            classifyMap.put(Classify.Material.getDesc(), Classify.Material);
+            classifyMap.put(Classify.Download.getDesc(), Classify.Download);
+            
+            // 综合其他
+            classifyMap.put(Classify.Computer.getDesc(), Classify.Computer);
+            classifyMap.put(Classify.Digital.getDesc(), Classify.Digital);
+            classifyMap.put(Classify.Recruitment.getDesc(), Classify.Recruitment);
+            classifyMap.put(Classify.Government.getDesc(), Classify.Government);
+        }
     }
     
     /**

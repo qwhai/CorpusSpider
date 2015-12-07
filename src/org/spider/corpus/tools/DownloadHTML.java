@@ -12,10 +12,10 @@ import org.utils.naga.filter.BloomFilter;
 import org.utils.naga.web.HTMLParserUtils;
 
 /**
- * 按照一定的协议将网页下载到本地
- * 2015‎年‎11‎月‎25‎日
+ * <p>按照一定的协议将网页下载到本地</p>
+ * 2015年11月25日
  * 
- * @author Q-WHai
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
  * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
  * @version 0.1
  */

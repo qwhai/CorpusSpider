@@ -10,11 +10,14 @@ import org.spider.corpus.filter.KeywordFilter;
 import org.utils.naga.str.StringUtils;
 
 /**
- * 工具类
- * 使用Anjs分词器进行分词的分词工具
  * 
- * @author Naga
- * Blog : http://blog.csdn.net/lemon_tree12138
+ * <p>工具类</p>
+ * <p>使用Anjs分词器进行分词的分词工具</p>
+ * 2015年12月3日
+ * 
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
+ * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
+ * @version 0.1
  */
 public class AnjsSplitWordsUtils implements WordsSplitUtils {
 
@@ -57,5 +60,36 @@ public class AnjsSplitWordsUtils implements WordsSplitUtils {
         }
         
         return resultList;
+    }
+
+    @Override
+    public String getAnalyzerWords(String text) throws IOException {
+        if (StringUtils.isEmpty(text)) {
+            return null;
+        }
+        
+        List<String> words = realySplit(text);
+        if (words == null || words.size() == 0) {
+            return null;
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        int wordSize = words.size();
+        boolean firstFlag = true;
+        for (int i = 0; i < wordSize; i++) {
+            // 添加过滤器
+            String label = KeywordFilter.formatLabel(words.get(i));
+            if (StringUtils.isEmpty(label)) {
+                continue;
+            }
+            
+            buffer.append((firstFlag ? "" : " ") + label);
+            
+            if (firstFlag) {
+                firstFlag = false;
+            }
+        }
+        
+        return buffer.toString();
     }
 }

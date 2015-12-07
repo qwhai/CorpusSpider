@@ -4,8 +4,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * 队列，保存将要访问的URL
- * 此处的队列采用组合的方式
+ * <p>队列，保存将要访问的URL</p>
+ * <p>此处的队列采用组合的方式</p>
+ * 2015年11月25日
+ * 
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
+ * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
+ * @version 0.1
  */
 public class SpiderQueue {
 	// 使用链表实现队列

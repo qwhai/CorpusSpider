@@ -1,50 +1,67 @@
 package org.spider.corpus.tools;
 
 import java.io.IOException;
+import java.nio.file.NotDirectoryException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.spider.corpus.consts.Constants;
+import org.spider.corpus.thread.ParserHTMLRunnable;
+import org.spider.corpus.thread.SpiderThreadPool;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
+import org.utils.naga.exceptions.FileNameNotExistsException;
 import org.utils.naga.files.FileReadUtils;
 import org.utils.naga.files.FileUtils;
-import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.str.StringUtils;
-import org.utils.naga.web.HTMLParserUtils;
+import org.utils.naga.threads.ThreadUtils;
 
 /**
- * 1.提取出HTML中的可见文本
- * 2.分词
- * 3.存入文本
+ * <p>1.提取出HTML中的可见文本</p>
+ * <p>2.分词</p>
+ * <p>3.存入文本</p>
  * 
  * 2015‎年‎12‎月‎3‎日
  * 
- * @author Q-WHai
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
  * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
  * @version 0.1
  */
 public class ExtractionHTMLText {
 
-    private static final String RAW_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set/";
-    private static final String PARSER_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/parser_html_set/";
+    private AnjsSplitWordsUtils splitWordUtils = new AnjsSplitWordsUtils();
+    private SpiderThreadPool mPool = null;
     
     public static void main(String[] args) {
-        AnjsSplitWordsUtils utils = new AnjsSplitWordsUtils();
-        
         try {
-            List<String> lines = FileReadUtils.readLines(RAW_PATH + "汽车新闻.txt");
-            
-            for (String line : lines) {
-                String text = HTMLParserUtils.requestHTMLText(line, 30000);
-                if (StringUtils.isEmpty(text)) {
-                    continue;
-                }
-                
-                FileWriteUtils.appendFile(PARSER_PATH + "汽车新闻.txt", text);
-                
-                List<String> textWords = utils.getAnalyzerWordList(text);
-                FileWriteUtils.appendFile(PARSER_PATH + FileUtils.removeSuffixName("汽车新闻.txt"), textWords.toString());
-            }
-        } catch (IOException e) {
+            ExtractionHTMLText entry = new ExtractionHTMLText();
+            entry.initThreadPool();
+            entry.parserURL();
+        } catch (NotDirectoryException | FileNameNotExistsException e) {
             e.printStackTrace();
+        }
+    }
+    
+    private void initThreadPool() {
+        mPool = SpiderThreadPool.newInstance().create();
+    }
+    
+    private void parserURL() throws NotDirectoryException, FileNameNotExistsException {
+        String[] fileNames = FileUtils.getAllFileName(Constants.RAW_PATH);
+        for (String fileName : fileNames) {
+            try {
+                AtomicInteger urlIndex = new AtomicInteger(0);
+                List<String> urList = FileReadUtils.readLines(Constants.RAW_PATH + fileName);
+                for (String url : urList) {
+                    mPool.submit(new ParserHTMLRunnable(splitWordUtils, url, FileUtils.removeSuffixName(fileName), StringUtils.getDataIntegerString(urlIndex.get(), "#00000")), 3000);
+                    urlIndex.incrementAndGet();
+                    
+                    ThreadUtils.sleep(50);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            System.out.println("" + fileName);
         }
     }
 }

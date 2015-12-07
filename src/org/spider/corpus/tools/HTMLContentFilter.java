@@ -6,10 +6,10 @@ import org.jsoup.nodes.Document;
 import org.utils.naga.web.HTMLParserUtils;
 
 /**
- * 将HTML中会被显示给用户的内容给筛选出来
- * 2015年‎11‎月‎26‎日
+ * <p>将HTML中会被显示给用户的内容给筛选出来</p>
+ * 2015年12月7日
  * 
- * @author Q-WHai
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
  * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
  * @version 0.1
  */

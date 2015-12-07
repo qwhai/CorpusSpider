@@ -12,21 +12,22 @@ import org.utils.naga.filter.BloomFilter;
 import org.utils.naga.web.HTMLParserUtils;
 
 /**
- * 按照一定的协议将网页地址下载到本地
- * 2015‎年‎11‎月‎26‎日
  * 
- * @author Q-WHai
+ * <p>按照一定的协议将网页地址下载到本地</p>
+ * 2015年11月26日
+ * 
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
  * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
  * @version 0.1
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://history.sina.com.cn";
+    static final String BASE_ADDRESS = "http://www.zhcw.com";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/";
+    private static final String BASE_URL = BASE_ADDRESS + "/qlc/caiminzhijia/index_";
     private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/历史资料.txt";
+    private static final String SUB_PATH = BASE_PATH + "/彩票中奖.txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
     
@@ -37,9 +38,9 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 1; i++) {
-            url = BASE_URL;
-            addSinaHistoryHTMLElements(url);
+        for (int i = 2; i <= 50; i++) {
+            url = BASE_URL + i + ".shtml";
+            addLotteryHTMLElements(url);
             downloadHTMLs(SUB_PATH);
         }
     }
@@ -165,7 +166,8 @@ public class DownloadURL {
         }
     }
     
-    // TODO 新浪历史
+    // 新浪历史
+    @SuppressWarnings("unused")
     private static void addSinaHistoryHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
@@ -175,6 +177,67 @@ public class DownloadURL {
                 Element tmpElement = element.child(0).child(0);
                 mSpiderQueue.offer(tmpElement.attr("href"));
                 System.out.println("[" + urlCount.get() + "]" + tmpElement.attr("href"));
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 新浪育儿
+    @SuppressWarnings("unused")
+    private static void addSinaBabyHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "list_666");
+            for (Element element : titlelnkElements) {
+                Elements childrenElements = element.children();
+                for (Element child : childrenElements) {
+                    mSpiderQueue.offer(child.child(0).attr("href"));
+                    urlCount.incrementAndGet();
+                    System.out.println("[" + urlCount.get() + "]" + child.child(0));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 新浪游戏
+    @SuppressWarnings("unused")
+    private static void addSinaGameHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "newslist");
+            for (Element element : titlelnkElements) {
+                Elements childrenElements = element.child(0).children();
+                for (Element child : childrenElements) {
+                    mSpiderQueue.offer(child.child(2).attr("href"));
+                    urlCount.incrementAndGet();
+                    System.out.println("[" + urlCount.get() + "]" + child.child(2).attr("href"));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 彩票
+    private static void addLotteryHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "contlist");
+            Elements childrenElements = titlelnkElements.get(0).child(1).children();
+            for (Element element : childrenElements) {
+                if (element.childNodeSize() == 0) {
+                    continue;
+                }
+                
+                mSpiderQueue.offer(BASE_ADDRESS + element.child(1).attr("href"));
+                urlCount.incrementAndGet();
+                System.out.println("[" + urlCount.get() + "]" + BASE_ADDRESS + element.child(1).attr("href"));
             }
         } catch (IOException e) {
             System.err.println("addElements:" + url);
