@@ -8,7 +8,9 @@ import java.util.concurrent.TimeUnit;
 import org.utils.naga.consts.Constant.TimeUtils;
 
 /**
- * <p>自定义封装的线程池</p>
+ * <p>
+ * 自定义封装的线程池
+ * </p>
  * 2015年12月7日
  * 
  * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>

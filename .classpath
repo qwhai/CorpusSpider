@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="E:/workspace/src/jar/java/jsoup/jsoup-1.8.1.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/src/jar/mysql/com/mysql/jdbc/mysql-connector-java-5.1.6-bin.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/src/jar/custom/jutils-core-0.1.jar" sourcepath="/Naga-UtilLibrary"/>
 	<classpathentry kind="lib" path="E:/workspace/Jar/ansj/ansj_seg-2.0.8.jar"/>
 	<classpathentry kind="lib" path="E:/workspace/Jar/ansj/nlp-lang-1.0.jar"/>
 	<classpathentry kind="lib" path="E:/workspace/Jar/ansj/tree_split-1.4.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/mysql/mysql-connector-java-5.1.6-bin.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/jsoup/jsoup-1.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/william-jutils/jutils-core-0.1.jar" sourcepath="/Naga-UtilLibrary"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

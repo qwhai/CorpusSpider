@@ -13,6 +13,7 @@ import java.util.Queue;
  * @version 0.1
  */
 public class SpiderQueue {
+    
 	// 使用链表实现队列
 	private Queue<String> mQueue = null;
 

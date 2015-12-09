@@ -19,7 +19,7 @@ import org.utils.naga.web.HTMLParserUtils;
 public class HTMLContentFilter {
 
     public static void main(String[] args) {
-        new HTMLContentFilter().filter("http://hotel.elong.com/beijing/00101741/");
+        new HTMLContentFilter().filter("http://music.baidu.com/song/259143606");
     }
 
     private void filter(String url) {

@@ -26,11 +26,11 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://sc.chinaz.com";
+    static final String BASE_ADDRESS = "http://music.migu.cn";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/tubiao/index_";
+    private static final String BASE_URL = BASE_ADDRESS + "/webfront/song/tagdetail.do?id=1000587726&loc=P2Z1Y1L2N1&locno=3&cid=001002A&pagenum=";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Material.getDesc() + ".txt";
+    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Muisc.getDesc() + ".txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
     
@@ -41,14 +41,59 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 2; i <= 100; i++) {
-            url = BASE_URL + i + ".html";
-            addMaterialHTMLElements(url);
+        for (int i = 1; i <= 50; i++) {
+            url = BASE_URL + i;
+            addMuiscHTMLElements(url);
             downloadHTMLs(SUB_PATH);
         }
     }
     
+    // 咪咕音乐
+    private static void addMuiscHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "fl song_name text_clip");
+            for (Element rootElement : rootElements) {
+                String href = rootElement.child(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + rootElement.child(0).attr("href"));
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 政府网站
+    @SuppressWarnings("unused")
+    private static void addGovernmentHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "info");
+            for (Element rootElement : rootElements) {
+                Elements childrenElements = rootElement.children();
+                String href = childrenElements.get(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
     // 资源素材
+    @SuppressWarnings("unused")
     private static void addMaterialHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
