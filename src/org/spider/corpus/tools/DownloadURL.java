@@ -6,14 +6,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.spider.corpus.consts.Classify;
+import org.spider.corpus.consts.Constants;
 import org.spider.corpus.queue.SpiderQueue;
 import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.filter.BloomFilter;
+import org.utils.naga.str.StringUtils;
 import org.utils.naga.web.HTMLParserUtils;
 
 /**
- * 
- * <p>按照一定的协议将网页地址下载到本地</p>
+ * <p>
+ * 按照一定的协议将网页地址下载到本地
+ * </p>
  * 2015年11月26日
  * 
  * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
@@ -22,12 +26,11 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://www.zhcw.com";
+    static final String BASE_ADDRESS = "http://sc.chinaz.com";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/qlc/caiminzhijia/index_";
-    private static final String BASE_PATH = "E:/workspace/src/Java/Bigdata/Classify/URL/naive_bayes_classifier_data/raw_html_set";
+    private static final String BASE_URL = BASE_ADDRESS + "/tubiao/index_";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = BASE_PATH + "/彩票中奖.txt";
+    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Material.getDesc() + ".txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
     
@@ -38,11 +41,213 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 2; i <= 50; i++) {
-            url = BASE_URL + i + ".shtml";
-            addLotteryHTMLElements(url);
+        for (int i = 2; i <= 100; i++) {
+            url = BASE_URL + i + ".html";
+            addMaterialHTMLElements(url);
             downloadHTMLs(SUB_PATH);
         }
+    }
+    
+    // 资源素材
+    private static void addMaterialHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "text_left");
+            Elements childrenElements = rootElements.get(0).child(1).children();
+            for (Element childrenElement : childrenElements) {
+                if (childrenElement.childNodeSize() == 0) {
+                    continue;
+                }
+                
+                String href = BASE_ADDRESS + childrenElement.child(0).child(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                mSpiderQueue.offer(href);
+                urlCount.incrementAndGet();
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 酒店住宿[艺龙]
+    @SuppressWarnings("unused")
+    private static void addHotelHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            urlCount.incrementAndGet();
+            if (StringUtils.isEmpty(document.text())) {
+                System.out.println("[" + urlCount.get() + "]");
+                return;
+            }
+            
+            mSpiderQueue.offer(url);
+            System.out.println("[" + urlCount.get() + "]" + url);
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 星相算命
+    @SuppressWarnings("unused")
+    private static void addFortuneHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements  = document.getElementsByAttributeValue("class", "e2");
+            Elements childrenElements = rootElements.get(0).children();
+            for (Element element : childrenElements) {
+                String href = BASE_ADDRESS + element.child(0).attr("href");
+                mSpiderQueue.offer(href);
+                urlCount.incrementAndGet();
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 小说文字[起点中文]
+    @SuppressWarnings("unused")
+    private static void addQiDianHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements  = document.getElementsByTag("tbody");
+            Elements childrenElements = rootElements.get(0).children();
+            
+            boolean firstFlag = true;
+            for (Element element : childrenElements) {
+                if (!firstFlag) {
+                    String href = element.child(2).child(0).attr("href");
+                    if (StringUtils.isEmpty(href)) {
+                        continue;
+                    }
+                    
+                    mSpiderQueue.offer(href);
+                    urlCount.incrementAndGet();
+                    System.out.println("[" + urlCount.get() + "]" + href);
+                }
+                
+                if (firstFlag) {
+                    firstFlag = false;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 美食烹饪
+    @SuppressWarnings("unused")
+    private static void addCookHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "ui_list_1 space_box_home get_num");
+            Elements childrenElements = titlelnkElements.get(0).child(0).children();
+            for (Element element : childrenElements) {
+                String href = element.child(0).child(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                mSpiderQueue.offer(href);
+                urlCount.incrementAndGet();
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 电脑硬件
+    @SuppressWarnings("unused")
+    private static void addComputerHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "Em_2");
+            for (Element element : titlelnkElements) {
+                Elements childrenElements = element.child(1).children();
+                for (Element childrenElement : childrenElements) {
+                    String href = childrenElement.child(0).attr("href");
+                    if (StringUtils.isEmpty(href)) {
+                        continue;
+                    }
+                    
+                    mSpiderQueue.offer(href);
+                    urlCount.incrementAndGet();
+                    System.out.println("[" + urlCount.get() + "]" + href);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 会议沙龙 【segmentfault】
+    @SuppressWarnings("unused")
+    private static void addSalonHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "col-md-3 col-sm-4 col-xs-12");
+            for (Element element : titlelnkElements) {
+                mSpiderQueue.offer(BASE_ADDRESS + element.child(0).child(0).attr("href"));
+                urlCount.incrementAndGet();
+                System.out.println("[" + urlCount.get() + "]" + BASE_ADDRESS + element.child(0).child(0).attr("href"));
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 化学
+    @SuppressWarnings("unused")
+    private static void addChymistryHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements titlelnkElements = document.getElementsByAttributeValue("class", "article-list");
+            Element childrenElement = titlelnkElements.get(0);
+            Elements childrenElements = childrenElement.children();
+            for (Element element : childrenElements) {
+                String href = element.child(1).child(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 法律维权
+    @SuppressWarnings("unused")
+    private static void addLawHTMLElements(String url) {
+        mSpiderQueue.offer(url);
+    }
+    
+    // 暴走漫画
+    @SuppressWarnings("unused")
+    private static void addBaozouHTMLElements(String url) {
+        mSpiderQueue.offer(url);
+    }
+    
+    // 糗百
+    @SuppressWarnings("unused")
+    private static void addQiuShiBaiKeHTMLElements(String url) {
+        mSpiderQueue.offer(url);
     }
     
     // 数盟 http://dataunion.org
@@ -225,6 +430,7 @@ public class DownloadURL {
     }
     
     // 彩票
+    @SuppressWarnings("unused")
     private static void addLotteryHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);

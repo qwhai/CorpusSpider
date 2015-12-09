@@ -32,7 +32,6 @@ public class Config {
             classifyMap.put(Classify.Python.getDesc(), Classify.Python);
             classifyMap.put(Classify.Java.getDesc(), Classify.Java);
             classifyMap.put(Classify.IOS.getDesc(), Classify.IOS);
-            classifyMap.put(Classify.Ruby.getDesc(), Classify.Ruby);
             classifyMap.put(Classify.C.getDesc(), Classify.C);
             classifyMap.put(Classify.PHP.getDesc(), Classify.PHP);
             classifyMap.put(Classify.Linux.getDesc(), Classify.Linux);

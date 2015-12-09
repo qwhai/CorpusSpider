@@ -52,7 +52,7 @@ public class ExtractionHTMLText {
                 AtomicInteger urlIndex = new AtomicInteger(0);
                 List<String> urList = FileReadUtils.readLines(Constants.RAW_PATH + fileName);
                 for (String url : urList) {
-                    mPool.submit(new ParserHTMLRunnable(splitWordUtils, url, FileUtils.removeSuffixName(fileName), StringUtils.getDataIntegerString(urlIndex.get(), "#00000")), 3000);
+                    mPool.submit(new ParserHTMLRunnable(splitWordUtils, url, FileUtils.removeSuffixName(fileName), StringUtils.formatIntegerString(urlIndex.get(), "#00000")), 3000);
                     urlIndex.incrementAndGet();
                     
                     ThreadUtils.sleep(50);

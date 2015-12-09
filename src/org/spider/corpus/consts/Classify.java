@@ -1,17 +1,19 @@
 package org.spider.corpus.consts;
 
 /**
+ * <p>
  * 分类的枚举
+ * </p>
  * 2015年12月7日
  * 
- * @author Q-WHai
+ * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
  * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
  * @version 0.1
  */
 public enum Classify {
 
     // 编程开发
-    Android("Android开发"), Python("Python开发"), Java("Java开发"), IOS("IOS开发"), Ruby("Ruby开发"),
+    Android("Android开发"), Python("Python开发"), Java("Java开发"), IOS("IOS开发"),
     C("C语言"), PHP("PHP开发"), Linux("Linux技术"), Coding("编程开发"),
     Database("数据库"), Demand("项目需求"), Datamining("数据挖掘"), AI("人工智能"), Bigdata("大数据"),
     ComputerGraphics("计算机图形"),
@@ -28,7 +30,7 @@ public enum Classify {
     
     // 网络服务
     SearchEngine("搜索引擎"), Login("登录注册"), CloudDisk("网盘"), Portal("门户网站"), Communication("移动通讯"),
-    E_Mail("电子邮件"), Spam("垃圾邮件"), E_GreetingCard("电子贺卡"), 
+    E_Mail("电子邮件"), Spam("垃圾邮箱"), E_GreetingCard("电子贺卡"), 
     
     // 商业经济
     Energy("能源化工"), Agriculture("农林牧渔"), Bank("银行储蓄"),
