@@ -21,7 +21,7 @@ public class Config {
     public static class SystemConfig {
         
         /** 是否打印调试信息的开关 */
-        public static final boolean DEBUG = false;
+        public static final boolean DEBUG = true;
     }
     
     public static class ClassifyConfig {

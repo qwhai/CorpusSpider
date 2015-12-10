@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.spider.corpus.consts.Classify;
+import org.spider.corpus.consts.Config;
 import org.spider.corpus.consts.Constants;
 import org.spider.corpus.queue.SpiderQueue;
 import org.utils.naga.files.FileWriteUtils;
@@ -26,11 +27,11 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://music.migu.cn";
+    static final String BASE_ADDRESS = "http://www.icbc.com.cn";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/webfront/song/tagdetail.do?id=1000587726&loc=P2Z1Y1L2N1&locno=3&cid=001002A&pagenum=";
+    private static final String BASE_URL = BASE_ADDRESS + "/icbc/%E7%BD%91%E4%B8%8A%E7%90%86%E8%B4%A2/%E4%B8%93%E5%AE%B6%E8%A7%86%E7%82%B9/default-PageList-";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Muisc.getDesc() + ".txt";
+    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Bank.getDesc() + ".txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
     
@@ -41,18 +42,43 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 50; i++) {
-            url = BASE_URL + i;
-            addMuiscHTMLElements(url);
-            downloadHTMLs(SUB_PATH);
+        for (int i = 1; i <= 4; i++) {
+            url = BASE_URL + i + ".htm";
+            addICBCBankHTMLElements(url);
+            
+            if (!Config.SystemConfig.DEBUG) {
+                downloadHTMLs(SUB_PATH);
+            }
         }
     }
     
-    // 咪咕音乐
-    private static void addMuiscHTMLElements(String url) {
+    // 银行储蓄[ICBC]
+    private static void addICBCBankHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
-            Elements rootElements = document.getElementsByAttributeValue("class", "fl song_name text_clip");
+            Elements rootElements = document.getElementsByAttributeValue("class", "textlb");
+            for (Element rootElement : rootElements) {
+                String href = BASE_ADDRESS + rootElement.attr("href");
+                if (StringUtils.isEmpty(href) || StringUtils.RegexUtils.isSub(href, "default")) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 优酷视频
+    @SuppressWarnings("unused")
+    private static void addVideoHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "p-link");
             for (Element rootElement : rootElements) {
                 String href = rootElement.child(0).attr("href");
                 if (StringUtils.isEmpty(href)) {
@@ -61,7 +87,53 @@ public class DownloadURL {
                 
                 urlCount.incrementAndGet();
                 mSpiderQueue.offer(href);
-                System.out.println("[" + urlCount.get() + "]" + rootElement.child(0).attr("href"));
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 音乐歌曲[音悦台]
+    @SuppressWarnings("unused")
+    private static void addMuiscHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "clearfix");
+            Elements childrenElements = rootElements.get(0).children();
+            for (Element childrenElement : childrenElements) {
+                String href = childrenElement.child(0).child(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
+    // 新浪音乐
+    @SuppressWarnings("unused")
+    private static void addSinaMuiscHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "latest_songs");
+            Elements childrenElements = rootElements.get(0).child(0).children();
+            for (Element childrenElement : childrenElements) {
+                String href = childrenElement.child(0).child(0).attr("href");
+                if (StringUtils.isEmpty(href)) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + href);
             }
         } catch (IOException e) {
             System.err.println("addElements:" + url);

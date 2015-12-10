@@ -3,6 +3,7 @@ package org.spider.corpus.tools;
 import java.io.IOException;
 
 import org.jsoup.nodes.Document;
+import org.spider.corpus.utils.AnjsSplitWordsUtils;
 import org.utils.naga.web.HTMLParserUtils;
 
 /**
@@ -19,13 +20,16 @@ import org.utils.naga.web.HTMLParserUtils;
 public class HTMLContentFilter {
 
     public static void main(String[] args) {
-        new HTMLContentFilter().filter("http://music.baidu.com/song/259143606");
+        new HTMLContentFilter().filter("http://my.cnki.net/elibregister/commonRegister.aspx");
     }
 
     private void filter(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
-            System.out.println(document.text());
+            System.out.println("分词前：" + document.text());
+            
+            AnjsSplitWordsUtils splitWordsUtils = new AnjsSplitWordsUtils();
+            System.out.println("分词后：" + splitWordsUtils.getAnalyzerWords(document.text()));
         } catch (IOException e) {
             e.printStackTrace();
         }
