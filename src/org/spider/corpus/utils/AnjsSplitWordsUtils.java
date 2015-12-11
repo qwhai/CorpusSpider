@@ -21,6 +21,28 @@ import org.utils.naga.str.StringUtils;
  */
 public class AnjsSplitWordsUtils implements WordsSplitUtils {
 
+    private static AnjsSplitWordsUtils mSplitWordsUtils = null;
+    private KeywordFilter mKeywordFilter = null;
+    
+    private AnjsSplitWordsUtils() {
+        initEvent();
+    }
+    
+    // 使用单例模式来实例化分词工具类
+    public static AnjsSplitWordsUtils newInstance() {
+        if (mSplitWordsUtils == null) {
+            mSplitWordsUtils = new AnjsSplitWordsUtils();
+        }
+        
+        return mSplitWordsUtils;
+    }
+    
+    private void initEvent() {
+        if (mKeywordFilter == null) {
+            mKeywordFilter = KeywordFilter.newInstance();
+        }
+    }
+    
     // 使用Anjs的精确分词对文本进行分词
     private ArrayList<String> realySplit(String strbuf) {
         List<Term> parse = ToAnalysis.parse(strbuf);
@@ -51,7 +73,7 @@ public class AnjsSplitWordsUtils implements WordsSplitUtils {
         int wordSize = words.size();
         for (int i = 0; i < wordSize; i++) {
             // 添加过滤器
-            String label = KeywordFilter.formatLabel(words.get(i));
+            String label = mKeywordFilter.formatLabel(words.get(i));
             if (label == null) {
                 continue;
             }
@@ -78,7 +100,7 @@ public class AnjsSplitWordsUtils implements WordsSplitUtils {
         boolean firstFlag = true;
         for (int i = 0; i < wordSize; i++) {
             // 添加过滤器
-            String label = KeywordFilter.formatLabel(words.get(i));
+            String label = mKeywordFilter.formatLabel(words.get(i));
             if (StringUtils.isEmpty(label)) {
                 continue;
             }

@@ -1,6 +1,7 @@
 package org.spider.corpus.tools;
 
 import java.io.IOException;
+import java.util.BitSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jsoup.nodes.Document;
@@ -12,6 +13,7 @@ import org.spider.corpus.consts.Constants;
 import org.spider.corpus.queue.SpiderQueue;
 import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.filter.BloomFilter;
+import org.utils.naga.nums.NumberUtils;
 import org.utils.naga.str.StringUtils;
 import org.utils.naga.web.HTMLParserUtils;
 
@@ -27,11 +29,11 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class DownloadURL {
 
-    static final String BASE_ADDRESS = "http://www.icbc.com.cn";
+    static final String BASE_ADDRESS = "http://item.jd.com";
     private static BloomFilter mBloomFilter = null;
-    private static final String BASE_URL = BASE_ADDRESS + "/icbc/%E7%BD%91%E4%B8%8A%E7%90%86%E8%B4%A2/%E4%B8%93%E5%AE%B6%E8%A7%86%E7%82%B9/default-PageList-";
+    private static final String BASE_URL = BASE_ADDRESS + "/";
     private static SpiderQueue mSpiderQueue = null;
-    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Bank.getDesc() + ".txt";
+    private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Shopping.getDesc() + ".txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
     
@@ -42,9 +44,9 @@ public class DownloadURL {
     
     public static void main(String[] args) {
         String url = "";
-        for (int i = 1; i <= 4; i++) {
-            url = BASE_URL + i + ".htm";
-            addICBCBankHTMLElements(url);
+        for (int i = 1; i <= 1; i++) {
+            url = BASE_URL + ".html";
+            addJDHTMLElements();
             
             if (!Config.SystemConfig.DEBUG) {
                 downloadHTMLs(SUB_PATH);
@@ -52,7 +54,73 @@ public class DownloadURL {
         }
     }
     
+    // 网上购物[奶茶东]
+    // http://item.jd.com/1791808238.html
+    private static void addJDHTMLElements() {
+        int limit = 2000000000;
+        BitSet saved = new BitSet(limit);
+        String text = "";
+        String url = "";
+        
+        while (true) {
+            int random = NumberUtils.randomInteger(limit);
+            if (saved.get(random)) {
+                continue;
+            }
+            
+            saved.set(random, true);
+            
+            url = "http://item.jd.com/" + StringUtils.formatIntegerString(random, "#0000000000") + ".html";
+            
+            try {
+                text = HTMLParserUtils.requestHTMLToString(url, 30000, false);
+                if (StringUtils.RegexUtils.isSub(text, "<title>302 Found</title>")) {
+                    continue;
+                }
+                
+                text = HTMLParserUtils.requestHTMLText(url, 30000, false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+            if (StringUtils.isEmpty(text)) {
+                continue;
+            }
+            
+            urlCount.incrementAndGet();
+            mSpiderQueue.offer(url);
+            System.out.println("[" + urlCount.get() + "]" + url);
+            
+            if (urlCount.get() == 1000) {
+                break;
+            }
+        }
+    }
+    
+    // 技术培训
+    @SuppressWarnings("unused")
+    private static void addTainningHTMLElements(String url) {
+        try {
+            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Elements rootElements = document.getElementsByAttributeValue("class", "studentS_con_play");
+            for (Element rootElement : rootElements) {
+                String href = rootElement.attr("href");
+                if (StringUtils.isEmpty(href) || !StringUtils.RegexUtils.isWebsiteAddress(href)) {
+                    continue;
+                }
+                
+                urlCount.incrementAndGet();
+                mSpiderQueue.offer(href);
+                System.out.println("[" + urlCount.get() + "]" + href);
+            }
+        } catch (IOException e) {
+            System.err.println("addElements:" + url);
+            e.printStackTrace();
+        }
+    }
+    
     // 银行储蓄[ICBC]
+    @SuppressWarnings("unused")
     private static void addICBCBankHTMLElements(String url) {
         try {
             Document document = HTMLParserUtils.requestHTML(url, 30000);

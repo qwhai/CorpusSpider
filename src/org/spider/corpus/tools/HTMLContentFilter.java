@@ -1,6 +1,8 @@
 package org.spider.corpus.tools;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.jsoup.nodes.Document;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
@@ -20,7 +22,20 @@ import org.utils.naga.web.HTMLParserUtils;
 public class HTMLContentFilter {
 
     public static void main(String[] args) {
-        new HTMLContentFilter().filter("http://my.cnki.net/elibregister/commonRegister.aspx");
+        HTMLContentFilter filter = new HTMLContentFilter();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String url = "";
+            System.out.print("输入URL：");
+            while ((url = reader.readLine()) != "EOF") {
+                filter.filter(url);
+                System.out.print("输入URL：");
+            }
+            
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void filter(String url) {
@@ -28,7 +43,7 @@ public class HTMLContentFilter {
             Document document = HTMLParserUtils.requestHTML(url, 30000);
             System.out.println("分词前：" + document.text());
             
-            AnjsSplitWordsUtils splitWordsUtils = new AnjsSplitWordsUtils();
+            AnjsSplitWordsUtils splitWordsUtils = AnjsSplitWordsUtils.newInstance();
             System.out.println("分词后：" + splitWordsUtils.getAnalyzerWords(document.text()));
         } catch (IOException e) {
             e.printStackTrace();

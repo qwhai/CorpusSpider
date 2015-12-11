@@ -8,5 +8,9 @@
 	<classpathentry kind="lib" path="E:/workspace/Jar/mysql/mysql-connector-java-5.1.6-bin.jar"/>
 	<classpathentry kind="lib" path="E:/workspace/Jar/jsoup/jsoup-1.8.1.jar"/>
 	<classpathentry kind="lib" path="E:/workspace/Jar/william-jutils/jutils-core-0.1.jar" sourcepath="/Naga-UtilLibrary"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/commons-logging/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/commons-codec/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/commons-httpclient/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/Jar/htmlparser/htmlparser-jdk1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

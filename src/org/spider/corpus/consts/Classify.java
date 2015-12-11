@@ -29,7 +29,7 @@ public enum Classify {
     Surrounding("团购周边"), Shopping("网上购物"),
     
     // 网络服务
-    SearchEngine("搜索引擎"), Login("登录注册"), CloudDisk("网盘"), Portal("门户网站"), Communication("移动通讯"),
+    SearchEngine("搜索引擎"), Login("登录注册"), CloudDisk("网络云盘"), Portal("门户网站"), Communication("移动通讯"),
     E_Mail("电子邮件"), Spam("垃圾邮箱"), E_GreetingCard("电子贺卡"), 
     
     // 商业经济

@@ -16,6 +16,7 @@ import org.utils.naga.str.StringUtils;
 import org.utils.naga.threads.ThreadUtils;
 
 /**
+ * 多线程解析URL
  * <p>1.提取出HTML中的可见文本</p>
  * <p>2.分词</p>
  * <p>3.存入文本</p>
@@ -28,7 +29,7 @@ import org.utils.naga.threads.ThreadUtils;
  */
 public class ExtractionHTMLText {
 
-    private AnjsSplitWordsUtils splitWordUtils = new AnjsSplitWordsUtils();
+    private AnjsSplitWordsUtils splitWordUtils = AnjsSplitWordsUtils.newInstance();
     private SpiderThreadPool mPool = null;
     
     public static void main(String[] args) {

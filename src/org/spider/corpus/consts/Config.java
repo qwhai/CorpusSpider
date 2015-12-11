@@ -20,8 +20,8 @@ public class Config {
 
     public static class SystemConfig {
         
-        /** 是否打印调试信息的开关 */
-        public static final boolean DEBUG = true;
+        /** 当前是否为调试编码状态的开关 */
+        public static final boolean DEBUG = false;
     }
     
     public static class ClassifyConfig {

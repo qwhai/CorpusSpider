@@ -1,8 +1,11 @@
 package org.spider.corpus.filter;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.spider.corpus.consts.Config;
+import org.utils.naga.files.FileReadUtils;
+import org.utils.naga.filter.BloomFilter;
 import org.utils.naga.str.StringUtils;
 
 /**
@@ -16,6 +19,30 @@ import org.utils.naga.str.StringUtils;
  */
 public class KeywordFilter {
 
+    private static KeywordFilter mKeywordFilter = null;
+    private BloomFilter mBlacklistFilter = null;
+    
+    private KeywordFilter() {
+        initEvent();
+    }
+    
+    // 使用单例模式来实例化关键词过滤类
+    public static KeywordFilter newInstance() {
+        if (mKeywordFilter == null) {
+            mKeywordFilter = new KeywordFilter();
+        }
+        
+        return mKeywordFilter;
+    }
+    
+    private void initEvent() {
+        if (mBlacklistFilter == null) {
+            mBlacklistFilter = new BloomFilter();
+        }
+        
+        initBloomFilter(mBlacklistFilter, "./data/black_list");
+    }
+    
     /**
      * 去除分词器分出来的字词中包含的词性
      * 
@@ -24,8 +51,24 @@ public class KeywordFilter {
      * @return
      *          返回去除了词性的字词
      */
-    public static String removeSpeech(String label) {
+    public String removeSpeech(String label) {
         return label.split("/")[0];
+    }
+    
+    public void f() {
+        f(0);
+    }
+    
+    public void f(String s) {
+        f(0, s);
+    }
+    
+    public void f(int a) {
+        f(a, null);
+    }
+
+    public void f(int a, String s) {
+        // TODO
     }
     
     /**
@@ -36,7 +79,7 @@ public class KeywordFilter {
      * @return
      *          格式化后的字词
      */
-    public static String formatString(String label) {
+    public String formatString(String label) {
         if (StringUtils.RegexUtils.isSub(label, "[0-9]*\\.*[0-9]+[集家岁千元幢万亿折度分期路场室厅卫厨届套]")) {
             StringBuffer buffer = new StringBuffer(label);
             buffer = new StringBuffer(buffer.toString().replaceAll("[0-9]*\\.*[0-9]+", "DD"));
@@ -66,17 +109,17 @@ public class KeywordFilter {
         return label;
     }
     
-    public static String formatLabel(String label) {
+    public String formatLabel(String label) {
         if (StringUtils.isEmpty(label)) {
             return null;
         }
         
         String formatLabel = "";
         List<String> legalKeywords = Config.FilterConfig.getLagalEnglishKeywords();
-        List<String> keywordBlackList = Config.FilterConfig.getKeywordBlackList();
+//        List<String> keywordBlackList = Config.FilterConfig.getKeywordBlackList(); // TODO
         if (StringUtils.RegexUtils.hasChinese(label)) {
             // 是否在黑名单当中
-            if (keywordBlackList.contains(label)) {
+            if (mBlacklistFilter.contains(label)) {
                 return null;
             }
             
@@ -96,5 +139,17 @@ public class KeywordFilter {
         }
         
         return formatLabel;
+    }
+    
+    // 初始化分词黑名单
+    private void initBloomFilter(BloomFilter filter, String path) {
+        try {
+            List<String> words = FileReadUtils.readLines(path);
+            for (String word : words) {
+                filter.add(word);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

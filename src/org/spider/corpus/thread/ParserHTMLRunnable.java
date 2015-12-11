@@ -22,6 +22,7 @@ import org.utils.naga.web.HTMLParserUtils;
 public class ParserHTMLRunnable implements Runnable {
 
     private AnjsSplitWordsUtils mSplitWordUtils;
+    
     private String mURL = null;
     private String mClassify = null; // 这个Classify与文件夹名称对应
     private String mFileName = null; // 这个FileName与URL对应
