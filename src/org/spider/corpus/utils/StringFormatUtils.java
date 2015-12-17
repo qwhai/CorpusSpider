@@ -1,7 +1,7 @@
 package org.spider.corpus.utils;
 
 import org.spider.corpus.consts.Constants;
-import org.utils.naga.exceptions.CannotInstanceException;
+import org.utils.naga.excep.CannotInstanceException;
 import org.utils.naga.interf.UtilsInterface;
 
 /**

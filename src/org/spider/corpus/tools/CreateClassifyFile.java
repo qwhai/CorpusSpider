@@ -7,7 +7,9 @@ import org.spider.corpus.consts.Constants;
 import org.utils.naga.files.FileUtils;
 
 /**
- * <p>将Classify枚举中的所有枚举类型都创建一个与之对应的文件</p>
+ * <p>
+ * 将Classify枚举中的所有枚举类型都创建一个与之对应的文件
+ * </p>
  * 2015年12月8日
  * 
  * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>

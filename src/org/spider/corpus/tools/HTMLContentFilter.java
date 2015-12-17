@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 
 import org.jsoup.nodes.Document;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
-import org.utils.naga.web.HTMLParserUtils;
+import org.utils.naga.web.impl.WebHTMLParserImpl;
+import org.utils.naga.web.poke.HTMLParserStrategy;
 
 /**
  * <p>
@@ -21,8 +22,12 @@ import org.utils.naga.web.HTMLParserUtils;
  */
 public class HTMLContentFilter {
 
+    private static HTMLParserStrategy htmlParser;
+    
     public static void main(String[] args) {
         HTMLContentFilter filter = new HTMLContentFilter();
+        htmlParser = new HTMLParserStrategy(new WebHTMLParserImpl());
+        
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String url = "";
@@ -40,7 +45,7 @@ public class HTMLContentFilter {
 
     private void filter(String url) {
         try {
-            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Document document = htmlParser.requestHTML(url, 30000);
             System.out.println("分词前：" + document.text());
             
             AnjsSplitWordsUtils splitWordsUtils = AnjsSplitWordsUtils.newInstance();

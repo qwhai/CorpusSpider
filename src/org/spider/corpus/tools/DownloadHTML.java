@@ -9,10 +9,13 @@ import org.spider.corpus.queue.SpiderQueue;
 import org.spider.corpus.utils.StringFormatUtils;
 import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.filter.BloomFilter;
-import org.utils.naga.web.HTMLParserUtils;
+import org.utils.naga.web.impl.WebHTMLParserImpl;
+import org.utils.naga.web.poke.HTMLParserStrategy;
 
 /**
- * <p>按照一定的协议将网页下载到本地</p>
+ * <p>
+ * 按照一定的协议将网页下载到本地
+ * </p>
  * 2015年11月25日
  * 
  * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
@@ -28,9 +31,13 @@ public class DownloadHTML {
     private static SpiderQueue mSpiderQueue = null;
     private static final String SUB_PATH = BASE_PATH + "/数据挖掘";
     
+    private static HTMLParserStrategy htmlParser;
+    
     static {
         mBloomFilter = new BloomFilter();
         mSpiderQueue = new SpiderQueue();
+        
+        htmlParser = new HTMLParserStrategy(new WebHTMLParserImpl());
     }
     
     public static void main(String[] args) {
@@ -45,7 +52,7 @@ public class DownloadHTML {
     
     private static void addElements(String url) {
         try {
-            Document document = HTMLParserUtils.requestHTML(url, 30000);
+            Document document = htmlParser.requestHTML(url, 30000);
             Elements titlelnkElements = document.getElementsByAttributeValue("class", "excerpt");
             for (Element element : titlelnkElements) {
                 mSpiderQueue.offer(element.child(0).child(0).child(0).attr("href"));
@@ -72,7 +79,7 @@ public class DownloadHTML {
     
     private static void downloadHTML(String path, String url) {
         try {
-            String htmlContent = HTMLParserUtils.requestHTMLToString(url);
+            String htmlContent = htmlParser.requestHTMLToString(url);
             FileWriteUtils.appendFile(path, htmlContent);
         } catch (IOException e) {
             System.err.println("downloadHTML:" + url);

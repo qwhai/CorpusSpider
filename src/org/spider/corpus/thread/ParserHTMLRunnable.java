@@ -6,7 +6,8 @@ import org.spider.corpus.consts.Constants;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
 import org.utils.naga.files.FileUtils;
 import org.utils.naga.files.FileWriteUtils;
-import org.utils.naga.web.HTMLParserUtils;
+import org.utils.naga.web.impl.WebHTMLParserImpl;
+import org.utils.naga.web.poke.HTMLParserStrategy;
 
 /**
  * <p>HTML解析工具</p>
@@ -22,6 +23,7 @@ import org.utils.naga.web.HTMLParserUtils;
 public class ParserHTMLRunnable implements Runnable {
 
     private AnjsSplitWordsUtils mSplitWordUtils;
+    private static HTMLParserStrategy htmlParser;
     
     private String mURL = null;
     private String mClassify = null; // 这个Classify与文件夹名称对应
@@ -32,12 +34,18 @@ public class ParserHTMLRunnable implements Runnable {
         mURL = url;
         mClassify = classify;
         mFileName = fileName;
+        
+        initEvent();
+    }
+    
+    private void initEvent() {
+        htmlParser = new HTMLParserStrategy(new WebHTMLParserImpl());
     }
     
     @Override
     public void run() {
         try {
-            String text = HTMLParserUtils.requestHTMLText(mURL, 30000);
+            String text = htmlParser.requestHTMLText(mURL, 30000);
             writeWordToFile(text, mClassify, mFileName);
         } catch (IOException e) {
             e.printStackTrace();

@@ -8,30 +8,27 @@ import org.utils.naga.str.StringUtils;
 
 /**
  * <p>
- * 解析文件，找到所有匹配的文本
+ * 提取出网页文本的有效链接
  * </p>
- * 2015年12月8日
+ * 2015年12月16日
  * 
  * @author <a href="http://weibo.com/u/5131020927">Q-WHai</a>
  * @see <a href="http://blog.csdn.net/lemon_tree12138">http://blog.csdn.net/lemon_tree12138</a>
  * @version 0.1
  */
-@Deprecated
-public class ParserURL {
+public class ExtractionKeywords {
 
     public static void main(String[] args) {
-        String pattern = "<a target=\"_blank\" href=\"http://dataunion.org/[0-9]+.html\">";
-        String string = "";
+        String text = "";
         try {
-            string = FileReadUtils.readToString("C:\\Users\\Naga\\Desktop\\BUFFER.txt");
+            text = FileReadUtils.readToString("C:/Users/Naga/Desktop/BUFFER.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
         
-        List<String> list = StringUtils.RegexUtils.getSubs(string, pattern);
-        int listSize = list.size();
-        for (int i = 0; i < listSize; i++) {
-            System.out.println(list.get(i));
+        List<String> list = StringUtils.RegexUtils.getSubs(text, "<a class=\"article-title\" href=\"http://www.guokr.com/article/[0-9]+/");
+        for (String string : list) {
+            System.out.println(string.replace("<a class=\"article-title\" href=\"", ""));
         }
     }
 }

@@ -9,7 +9,7 @@ import org.spider.corpus.consts.Constants;
 import org.spider.corpus.thread.ParserHTMLRunnable;
 import org.spider.corpus.thread.SpiderThreadPool;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
-import org.utils.naga.exceptions.FileNameNotExistsException;
+import org.utils.naga.excep.FileNameNotExistsException;
 import org.utils.naga.files.FileReadUtils;
 import org.utils.naga.files.FileUtils;
 import org.utils.naga.str.StringUtils;

@@ -55,22 +55,6 @@ public class KeywordFilter {
         return label.split("/")[0];
     }
     
-    public void f() {
-        f(0);
-    }
-    
-    public void f(String s) {
-        f(0, s);
-    }
-    
-    public void f(int a) {
-        f(a, null);
-    }
-
-    public void f(int a, String s) {
-        // TODO
-    }
-    
     /**
      * 格式一些特殊的字符串
      * 

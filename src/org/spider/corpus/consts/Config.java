@@ -105,6 +105,7 @@ public class Config {
             classifyMap.put(Classify.Astronomy.getDesc(), Classify.Astronomy);
             classifyMap.put(Classify.History.getDesc(), Classify.History);
             classifyMap.put(Classify.Baby.getDesc(), Classify.Baby);
+            classifyMap.put(Classify.Overseas.getDesc(), Classify.Overseas);
             
             // 博客论坛
             classifyMap.put(Classify.Salon.getDesc(), Classify.Salon);

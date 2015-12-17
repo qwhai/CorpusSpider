@@ -42,7 +42,8 @@ public enum Classify {
     
     // 教育文化
     Education("教育文化"), Math("数学学科"), Chymistry("化学学科"), Physical("物理学科"), Exam("考试招生"),
-    Biology("生物学科"), Astronomy("天文科普"), History("历史资料"), Baby("母婴育儿"),
+    Biology("生物学科"), Astronomy("天文科普"), History("历史资料"), Baby("母婴育儿"), Overseas("留学移民"),
+    Foreign("外语学习"),
     
     // 博客论坛
     Salon("会议沙龙"), Tainning("技术培训"), TechnicalBBS("技术社区"),
