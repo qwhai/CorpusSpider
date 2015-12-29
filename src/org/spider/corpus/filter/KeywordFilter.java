@@ -100,7 +100,6 @@ public class KeywordFilter {
         
         String formatLabel = "";
         List<String> legalKeywords = Config.FilterConfig.getLagalEnglishKeywords();
-//        List<String> keywordBlackList = Config.FilterConfig.getKeywordBlackList(); // TODO
         if (StringUtils.RegexUtils.hasChinese(label)) {
             // 是否在黑名单当中
             if (mBlacklistFilter.contains(label)) {
@@ -123,6 +122,18 @@ public class KeywordFilter {
         }
         
         return formatLabel;
+    }
+    
+    /**
+     * 黑名单是否包含某一关键词
+     * 
+     * @param keyword
+     *      关键词
+     * @return
+     *      包含结果
+     */
+    public boolean contains(String keyword) {
+        return mBlacklistFilter.contains(keyword);
     }
     
     // 初始化分词黑名单

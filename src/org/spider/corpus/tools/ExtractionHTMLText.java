@@ -11,6 +11,7 @@ import org.spider.corpus.thread.SpiderThreadPool;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
 import org.utils.naga.excep.FileNameNotExistsException;
 import org.utils.naga.files.FileReadUtils;
+import org.utils.naga.files.FileSearchUtils;
 import org.utils.naga.files.FileUtils;
 import org.utils.naga.str.StringUtils;
 import org.utils.naga.threads.ThreadUtils;
@@ -47,7 +48,7 @@ public class ExtractionHTMLText {
     }
     
     private void parserURL() throws NotDirectoryException, FileNameNotExistsException {
-        String[] fileNames = FileUtils.getAllFileName(Constants.RAW_PATH);
+        String[] fileNames = FileSearchUtils.getAllFileName(Constants.RAW_PATH);
         for (String fileName : fileNames) {
             try {
                 AtomicInteger urlIndex = new AtomicInteger(0);

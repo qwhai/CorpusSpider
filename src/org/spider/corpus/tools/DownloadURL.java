@@ -13,7 +13,7 @@ import org.spider.corpus.consts.Constants;
 import org.spider.corpus.queue.SpiderQueue;
 import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.filter.BloomFilter;
-import org.utils.naga.nums.NumberUtils;
+import org.utils.naga.nums.RandomUtils;
 import org.utils.naga.str.StringUtils;
 import org.utils.naga.web.impl.WebHTMLParserImpl;
 import org.utils.naga.web.poke.HTMLParserStrategy;
@@ -235,8 +235,10 @@ public class DownloadURL {
         String text = "";
         String url = "";
         
+        RandomUtils randomUtils = new RandomUtils(limit);
+        
         while (true) {
-            int random = NumberUtils.randomInteger(limit);
+            int random = randomUtils.nextInt();
             if (saved.get(random)) {
                 continue;
             }
