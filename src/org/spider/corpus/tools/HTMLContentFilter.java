@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import org.jsoup.nodes.Document;
 import org.spider.corpus.utils.AnjsSplitWordsUtils;
 import org.utils.naga.web.impl.WebHTMLParserImpl;
-import org.utils.naga.web.poke.HTMLParserStrategy;
+import org.utils.naga.web.poke.HTMLParserUtils;
 
 /**
  * <p>
@@ -22,11 +22,11 @@ import org.utils.naga.web.poke.HTMLParserStrategy;
  */
 public class HTMLContentFilter {
 
-    private static HTMLParserStrategy htmlParser;
+    private static HTMLParserUtils htmlParser;
     
     public static void main(String[] args) {
         HTMLContentFilter filter = new HTMLContentFilter();
-        htmlParser = new HTMLParserStrategy(new WebHTMLParserImpl());
+        htmlParser = new HTMLParserUtils(new WebHTMLParserImpl());
         
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

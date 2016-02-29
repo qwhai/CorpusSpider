@@ -16,7 +16,7 @@ import org.utils.naga.filter.BloomFilter;
 import org.utils.naga.nums.RandomUtils;
 import org.utils.naga.str.StringUtils;
 import org.utils.naga.web.impl.WebHTMLParserImpl;
-import org.utils.naga.web.poke.HTMLParserStrategy;
+import org.utils.naga.web.poke.HTMLParserUtils;
 
 /**
  * <p>
@@ -37,13 +37,13 @@ public class DownloadURL {
     private static final String SUB_PATH = Constants.RAW_PATH + "/" + Classify.Digital.getDesc() + ".txt";
     
     static AtomicInteger urlCount = new AtomicInteger(0);
-    private static HTMLParserStrategy htmlParser;
+    private static HTMLParserUtils htmlParser;
     
     static {
         mBloomFilter = new BloomFilter();
         mSpiderQueue = new SpiderQueue();
         
-        htmlParser = new HTMLParserStrategy(new WebHTMLParserImpl());
+        htmlParser = new HTMLParserUtils(new WebHTMLParserImpl());
     }
     
     public static void main(String[] args) {

@@ -10,7 +10,7 @@ import org.spider.corpus.utils.StringFormatUtils;
 import org.utils.naga.files.FileWriteUtils;
 import org.utils.naga.filter.BloomFilter;
 import org.utils.naga.web.impl.WebHTMLParserImpl;
-import org.utils.naga.web.poke.HTMLParserStrategy;
+import org.utils.naga.web.poke.HTMLParserUtils;
 
 /**
  * <p>
@@ -31,13 +31,13 @@ public class DownloadHTML {
     private static SpiderQueue mSpiderQueue = null;
     private static final String SUB_PATH = BASE_PATH + "/数据挖掘";
     
-    private static HTMLParserStrategy htmlParser;
+    private static HTMLParserUtils htmlParser;
     
     static {
         mBloomFilter = new BloomFilter();
         mSpiderQueue = new SpiderQueue();
         
-        htmlParser = new HTMLParserStrategy(new WebHTMLParserImpl());
+        htmlParser = new HTMLParserUtils(new WebHTMLParserImpl());
     }
     
     public static void main(String[] args) {
