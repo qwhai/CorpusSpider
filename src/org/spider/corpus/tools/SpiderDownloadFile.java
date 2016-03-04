@@ -117,7 +117,7 @@ public class SpiderDownloadFile {
             Set<String> urlSet = malwareModel.getUrlSet();
             for (String url : urlSet) {
                 fileName = extractName(url) + ".yar";
-                downloadFile(url, folder + fileName);
+                downloadYar(url, folder + fileName);
             }
         }
     }
@@ -137,6 +137,30 @@ public class SpiderDownloadFile {
 
         File folder = new File(folderName);
         return (folder.exists() && folder.isDirectory()) ? true : folder.mkdirs();
+    }
+    
+    /*
+     * 解析yar文件所在的单独界面HTML
+     * 
+     * @param yarURL
+     *      单个yar所在URL
+     * @param savePath
+     *      文件保存路径
+     */
+    private void downloadYar(String yarURL, String savePath) {
+        try {
+            Document document = parser.requestHTML(yarURL, 30000);
+            Elements elements = document.getElementsByAttributeValue("class", "panel-body");
+            for (Element element : elements) {
+                if (element.toString().contains("Click to Download ")) {
+                    String hashURL = rootURL + element.child(0).attr("href");
+                    downloadFile(hashURL, savePath);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
